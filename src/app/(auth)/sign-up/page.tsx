@@ -1,12 +1,16 @@
 'use client'
+
 import Link from 'next/link';
 import { FormProvider, useForm } from 'react-hook-form';
 
 import TextInput from '@/components/Form/TextInput';
+import { UserAuth } from '@/context/Auth';
 import { SignUpForm, signUpSchema } from '@/utils/schemas/sign-up';
 import { zodResolver } from '@hookform/resolvers/zod';
 
 const SignUp = () => {
+    const { signUp } = UserAuth();
+
     const form = useForm<SignUpForm>({
         defaultValues: {
             email: '',
@@ -16,8 +20,8 @@ const SignUp = () => {
         resolver: zodResolver(signUpSchema)
     });
 
-    const formSubmithandler = (values: any) => {
-        console.log({ values })
+    const formSubmithandler = async (values: SignUpForm) => {
+        await signUp(values.email, values.password);
     }
 
     return (
