@@ -29,4 +29,4 @@ const TextInput: React.FC<Props> = ({ name, label, containerClass, ...props }) =
     )
 }
 
-export default TextInput
+export default TextInput;

@@ -1,4 +1,3 @@
-import { UserData } from "@/context/Auth";
 import { firestore } from "@/firebase/config"
 import { User } from "firebase/auth";
 import { collection, doc, getDoc, setDoc } from "firebase/firestore"
@@ -15,7 +14,7 @@ export const createUser = async (user: User) => {
             email: user.email,
             id: user.uid,
             photoUrl: user.photoURL,
-        } as UserData;
+        };
 
         await setDoc(doc(usersRef, user.uid), newUser);
 
@@ -32,7 +31,7 @@ export const getUserByid = async (uid: string) => {
 
         const docSnap = await getDoc(docRef);
 
-        return docSnap.data() as UserData | undefined;
+        return docSnap.data();
     } catch (e) {
         console.error(e);
         throw e;
