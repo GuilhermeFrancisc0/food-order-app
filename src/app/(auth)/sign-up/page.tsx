@@ -13,7 +13,7 @@ import { SignUpForm, signUpSchema } from '@/utils/schemas/sign-up';
 import { zodResolver } from '@hookform/resolvers/zod';
 
 const SignUp = () => {
-    const { data: session } = useSession();
+    const { data: session, status } = useSession();
 
     const router = useRouter();
 
@@ -33,7 +33,7 @@ const SignUp = () => {
     }
 
     useEffect(() => {
-        if (session?.user.role) {
+        if (session?.user?.role) {
             router.replace(`/${session.user.role}`)
         }
     }, [session, router])
@@ -66,8 +66,10 @@ const SignUp = () => {
             <button
                 className="btn btn-primary mb-4"
                 onClick={form.handleSubmit(formSubmithandler)}
+                disabled={status === 'loading'}
             >
                 Sign Up
+                {status === 'loading' && <span className="loading loading-spinner loading-sm"></span>}
             </button>
 
             <span className='text-primary select-none text-center'>

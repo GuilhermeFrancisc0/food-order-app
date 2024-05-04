@@ -1,8 +1,8 @@
 "use client"
 
 import { signOut, useSession } from 'next-auth/react';
+import Image from 'next/image';
 import React from 'react';
-import Image from 'next/image'
 
 const Navbar: React.FC = () => {
     const { data: session } = useSession();
@@ -21,12 +21,12 @@ const Navbar: React.FC = () => {
                 <div className="dropdown dropdown-end">
                     <div tabIndex={0} role="button" className="btn btn-ghost btn-circle avatar">
                         <div className="w-10 rounded-full">
-                            {session?.user.image ?
-                                <Image alt="user logo" src={session?.user.image} width={32} height={32}/>
+                            {session?.user?.image ?
+                                <Image alt="user logo" src={session?.user.image} width={32} height={32} />
                                 :
                                 (
                                     <div className="h-full flex items-center justify-center bg-neutral text-neutral-content ">
-                                        {session?.user.email.charAt(0)}
+                                        {session?.user?.email?.charAt(0)}
                                     </div>
                                 )
                             }
