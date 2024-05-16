@@ -1,12 +1,13 @@
 'use client'
 
-import { signIn, useSession } from 'next-auth/react';
+import { useSession } from 'next-auth/react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 
 import TextInput from '@/components/Form/TextInput';
+import { signInWithCredentials, signInWithGoogle } from '@/services/auth';
 import { SignInForm, signInSchema } from '@/utils/schemas/sign-in';
 import { zodResolver } from '@hookform/resolvers/zod';
 
@@ -23,13 +24,9 @@ const SignIn = () => {
         resolver: zodResolver(signInSchema)
     });
 
-    const formSubmithandler = async (values: SignInForm) => {
-        await signIn('credentials', { redirect: false, ...values });
-    }
+    const formSubmithandler = async (values: SignInForm) => await signInWithCredentials(values);
 
-    const signInGoogle = async () => {
-        await signIn('google', { redirect: false });
-    };
+    const signInGoogle = async () => await signInWithGoogle();
 
     useEffect(() => {
         if (session?.user?.role) {

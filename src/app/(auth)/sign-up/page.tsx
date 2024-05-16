@@ -1,14 +1,13 @@
 'use client'
 
-import { createUserWithEmailAndPassword } from 'firebase/auth';
-import { signIn, useSession } from 'next-auth/react';
+import { useSession } from 'next-auth/react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 
 import TextInput from '@/components/Form/TextInput';
-import { auth } from '@/firebase/config';
+import { signUp } from '@/services/auth';
 import { SignUpForm, signUpSchema } from '@/utils/schemas/sign-up';
 import { zodResolver } from '@hookform/resolvers/zod';
 
@@ -26,11 +25,7 @@ const SignUp = () => {
         resolver: zodResolver(signUpSchema)
     });
 
-    const formSubmithandler = async (values: SignUpForm) => {
-        await createUserWithEmailAndPassword(auth, values.email, values.password);
-
-        await signIn('credentials', { redirect: false, ...values });
-    }
+    const formSubmithandler = async (values: SignUpForm) => await signUp(values);
 
     useEffect(() => {
         if (session?.user?.role) {

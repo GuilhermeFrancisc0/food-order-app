@@ -1,8 +1,10 @@
 "use client"
 
-import { signOut, useSession } from 'next-auth/react';
+import { useSession } from 'next-auth/react';
 import Image from 'next/image';
 import React from 'react';
+
+import { signOut } from '@/services/auth';
 
 const Navbar: React.FC = () => {
     const { data: session } = useSession();
