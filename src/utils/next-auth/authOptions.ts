@@ -21,20 +21,24 @@ export const authOptions: AuthOptions = {
                 password: { type: "password" }
             },
             async authorize(credentials) {
-                const userCredential = await signInWithEmailAndPassword(auth, credentials?.email!, credentials?.password!)
+                try {
+                    const userCredential = await signInWithEmailAndPassword(auth, credentials?.email!, credentials?.password!);
 
-                if (userCredential) {
-                    return {
-                        id: userCredential.user.uid,
-                        email: userCredential.user.email,
-                        name: userCredential.user.displayName,
-                        image: userCredential.user.photoURL,
-                        role: 'admin'
-                    };
+                    if (userCredential) {
+                        return {
+                            id: userCredential.user.uid,
+                            email: userCredential.user.email,
+                            name: userCredential.user.displayName,
+                            image: userCredential.user.photoURL,
+                            role: 'admin'
+                        };
+                    }
+
+                    return null;
+                } catch (e: any | Error) {
+                    throw e;
                 }
-
-                return null;
-            }
+            },
         })
     ],
     callbacks: {
