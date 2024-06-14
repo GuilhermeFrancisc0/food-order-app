@@ -31,6 +31,7 @@ export default function RootLayout({
               <div className='bg-[url("/bg.jpg")] bg-cover min-h-screen'>
                 {children}
               </div>
+              <div id="modal-root"></div>
             </ToastProvider>
           </body>
         </html>
