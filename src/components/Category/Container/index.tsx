@@ -10,17 +10,19 @@ import { Category } from '@/types/category';
 import CategoryCard from '../Card';
 import CategoryModal from '../Modal';
 import { useDisclose } from '@/hooks/util';
+import { useSession } from 'next-auth/react';
 
 type props = {
   categories: Category[];
-  isAdmin: boolean;
 }
 
-const CategoryContainer: React.FC<props> = ({ categories, isAdmin }) => {
+const CategoryContainer: React.FC<props> = ({ categories }) => {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
 
+  const { data: session } = useSession();
+  
   const [selectCategory, setSelectCategory] = useState<Category | undefined>(undefined);
 
   const categoryModal = useDisclose();
@@ -61,7 +63,7 @@ const CategoryContainer: React.FC<props> = ({ categories, isAdmin }) => {
       <div className='flex items-center'>
         <h1 className="text-2xl text-primary">Categorias</h1>
         {
-          isAdmin &&
+          session?.user?.role === 'admin' &&
           <button
             className="btn btn-ghost btn-circle btn-xs"
             onClick={handleCreate}
@@ -91,7 +93,7 @@ const CategoryContainer: React.FC<props> = ({ categories, isAdmin }) => {
           <CategoryCard
             key={category.name}
             category={category}
-            isAdmin={isAdmin}
+            isAdmin={session?.user?.role === 'admin'}
             isSelected={!!categoriesSelected.includes(category.name)}
             handleEdit={() => handleEdit(category)}
             handleChangeCategory={() => handleChangeCategory(category.name)}
@@ -99,7 +101,7 @@ const CategoryContainer: React.FC<props> = ({ categories, isAdmin }) => {
         ))}
       </Carousel>
 
-      {isAdmin && <CategoryModal modal={categoryModal} category={selectCategory}/>}
+      {session?.user?.role === 'admin' && <CategoryModal modal={categoryModal} category={selectCategory}/>}
     </>
   )
 }
