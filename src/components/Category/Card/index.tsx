@@ -3,7 +3,7 @@
 import { Pencil } from 'lucide-react';
 import Image from 'next/image';
 
-import { Category } from '@/types/category';
+import { Category } from '@/utils/schemas/category';
 
 type props = {
   category: Category;
