@@ -8,4 +8,4 @@ export const categorySchema = z.object({
         .min(1, { message: "Campo Imagem é Obrigatório" }),
 })
 
-export type CategoryForm = z.infer<typeof categorySchema>;
+export type Category = z.infer<typeof categorySchema>;

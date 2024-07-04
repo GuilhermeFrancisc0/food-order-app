@@ -1,16 +1,16 @@
 "use client"
 
 import { Plus, X } from 'lucide-react';
+import { useSession } from 'next-auth/react';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { useMemo, useState } from 'react';
 
 import Carousel from '@/components/Carousel';
-import { Category } from '@/types/category';
+import { useDisclose } from '@/hooks/util';
+import { Category } from '@/utils/schemas/category';
 
 import CategoryCard from '../Card';
 import CategoryModal from '../Modal';
-import { useDisclose } from '@/hooks/util';
-import { useSession } from 'next-auth/react';
 
 type props = {
   categories: Category[];

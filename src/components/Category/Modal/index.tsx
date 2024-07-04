@@ -6,8 +6,7 @@ import { FormProvider, useForm } from 'react-hook-form';
 import TextInput from '@/components/Form/TextInput';
 import Modal from '@/components/Modal';
 import { IUseDisclose } from '@/hooks/util';
-import { Category } from '@/types/category';
-import { CategoryForm, categorySchema } from '@/utils/schemas/category';
+import { Category, categorySchema } from '@/utils/schemas/category';
 import { zodResolver } from '@hookform/resolvers/zod';
 
 type props = {
@@ -20,7 +19,7 @@ const CategoryModal: React.FC<props> = ({ category, modal }) => {
   const [imgSrc, setImgSrc] = useState(EMPTY_IMG);
   const [imgSrcError, setImgSrcError] = useState(false);
 
-  const defaultValues: CategoryForm = {
+  const defaultValues: Category = {
     id: '',
     name: '',
     imageUrl: '',
@@ -33,7 +32,7 @@ const CategoryModal: React.FC<props> = ({ category, modal }) => {
 
   const formImgSrc = form.watch('imageUrl');
 
-  const formSubmithandler = (values: CategoryForm) => {
+  const formSubmithandler = (values: Category) => {
     if (!imgSrcError) {
       if (values.id)
         console.log('edit', values)
