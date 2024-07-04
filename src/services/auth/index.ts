@@ -1,59 +1,40 @@
 import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { signIn, signOut as authSignOut } from 'next-auth/react';
-import { toast } from 'react-toastify';
 
 import { auth } from '@/firebase/config';
-import { getToastUpdateOptions, toastOptions } from '@/providers/ToastProvider';
+import { asyncToast } from '@/utils/asyncToast';
 import { SignInForm } from '@/utils/schemas/sign-in';
 import { SignUpForm } from '@/utils/schemas/sign-up';
 
 export const signUp = async (values: SignUpForm) => {
-    const id = toast.loading('Criando usuário');
-
-    try {
+    const fn = async () => {
         await createUserWithEmailAndPassword(auth, values.email, values.password);
 
         await signIn('credentials', { redirect: false, ...values });
+    };
 
-        toast.update(id, getToastUpdateOptions('Usuário criado com sucesso!', 'success'));
-    } catch (e: any | Error) {
-        toast.update(id, getToastUpdateOptions(e.message, 'error'));
-    }
+    await asyncToast(fn, 'Criando usuário', 'Usuário criado com sucesso!').catch((e) => console.error(e));
 }
 
 export const signInWithCredentials = async (values: SignInForm) => {
-    const id = toast.loading('Verificando credenciais', toastOptions);
-
-    try {
+    const fn = async () => {
         const res = await signIn('credentials', { redirect: false, ...values });
 
         if (!res?.ok)
             throw new Error(res?.error!);
+    };
 
-        toast.update(id, getToastUpdateOptions('Usuário autenticado com sucesso!', 'success'));
-    } catch (e: any | Error) {
-        toast.update(id, getToastUpdateOptions(e.message, 'error'));
-    }
+    await asyncToast(fn, 'Verificando credenciais', 'Usuário autenticado com sucesso!').catch((e) => console.error(e));
 }
 
 export const signInWithGoogle = async () => {
-    const id = toast.loading('Redirecionando');
+    const fn = async () => await signIn('google', { redirect: false });
 
-    try {
-       await signIn('google', { redirect: false });
-    } catch (e: any | Error) {
-        toast.update(id, getToastUpdateOptions(e.message, 'error'));
-    }
+    await asyncToast(fn, 'Redirecionando', '').catch((e) => console.error(e));;
 }
 
 export const signOut = async () => {
-    const id = toast.loading('Realizando a desconexão');
+    const fn = async () => await authSignOut();
 
-    try {
-        await authSignOut();
-
-        toast.update(id, getToastUpdateOptions('Usuário desconectado com sucesso!', 'success'));
-    } catch (e: any | Error) {
-        toast.update(id, getToastUpdateOptions(e.message, 'error'));
-    }
+    await asyncToast(fn, 'Realizando a desconexão', 'Usuário desconectado com sucesso!').catch((e) => console.error(e));
 }
