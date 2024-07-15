@@ -20,7 +20,8 @@
     "react-dom": "^18",
     "react-hook-form": "^7.51.1",
     "react-toastify": "^10.0.5",
-    "zod": "^3.22.4"
+    "zod": "^3.22.4",
+    "zustand": "^4.5.4"
   },
   "devDependencies": {
     "@types/node": "^20",
