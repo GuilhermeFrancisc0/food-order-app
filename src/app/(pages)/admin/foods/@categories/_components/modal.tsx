@@ -6,6 +6,7 @@ import { FormProvider, useForm } from 'react-hook-form';
 import TextInput from '@/components/Form/TextInput';
 import Modal from '@/components/Modal';
 import { IUseDisclose } from '@/hooks/util';
+import { useCategoryStore } from '@/store/category';
 import { Category, categorySchema } from '@/utils/schemas/category';
 import { zodResolver } from '@hookform/resolvers/zod';
 
@@ -13,9 +14,17 @@ type props = {
   category?: Category
   modal: IUseDisclose;
 }
+
 const EMPTY_IMG = 'https://www.boomkwekerijwouters.be/images/Assort_nophoto.jpg';
 
 const CategoryModal: React.FC<props> = ({ category, modal }) => {
+  const [loading, createCategory, editCategory, deleteCategory] = useCategoryStore((state) => [
+    state.loading,
+    state.createCategory, 
+    state.editCategory, 
+    state.deleteCategory
+  ]);
+
   const [imgSrc, setImgSrc] = useState(EMPTY_IMG);
   const [imgSrcError, setImgSrcError] = useState(false);
 
@@ -32,20 +41,29 @@ const CategoryModal: React.FC<props> = ({ category, modal }) => {
 
   const formImgSrc = form.watch('imageUrl');
 
-  const formSubmithandler = (values: Category) => {
+  const formSubmithandler = async (values: Category) => {
     if (!imgSrcError) {
-      if (values.id)
-        console.log('edit', values)
-      else
-        console.log('create', values)
+      try {
+        values.id ? await editCategory(values) : await createCategory(values);
+  
+        modal.onClose();
+      } catch (e) {
+        console.error(e);
+      }
     } else {
       form.setError('imageUrl', { message: 'Nenhuma Imagem Encontrada' });
     }
   }
 
-  const handleRemove = () => {
-    console.log('remove', category)
-  }
+  const handleRemove = async () => {
+    try {
+      await deleteCategory(category?.id!);
+
+      modal.onClose();
+    } catch (e) {
+      console.error(e);
+    }
+  };
 
   useEffect(() => {
     if (!modal.isOpen || !category) {
@@ -98,6 +116,7 @@ const CategoryModal: React.FC<props> = ({ category, modal }) => {
       <button
         className="btn btn-primary mb-2 w-full"
         onClick={form.handleSubmit(formSubmithandler)}
+        disabled={loading}
       >
         Salvar
       </button>
@@ -106,8 +125,9 @@ const CategoryModal: React.FC<props> = ({ category, modal }) => {
         <button
           className="btn btn-outline hover:text-white w-full"
           onClick={handleRemove}
+          disabled={loading}
         >
-          remover
+          Remover
         </button>
       }
     </Modal>

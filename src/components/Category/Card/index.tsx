@@ -29,14 +29,14 @@ const CategoryCard: React.FC<props> = ({
   return (
     <div
       className={
-        `card w-32 h-30 my-2 mx-1 flex flex-shrink-0 flex-col cursor-pointer bg-base-100 rounded-xl transition ease-linear relative border-[1px] 
+        `card w-32 my-2 flex flex-shrink-0 flex-col cursor-pointer bg-base-100 rounded-xl transition ease-linear relative border-[1px] 
         ${isSelected ? 'shadow-md scale-105 border-primary' : 'shadow-sm hover:shadow-md hover:scale-105 border-transparent'}`
       }
       onClick={handleChangeCategory}
     >
       {isAdmin && handleEdit && (
         <button
-          className="btn btn-ghost btn-circle btn-xs absolute top-1 right-1 z-10"
+          className="btn btn-circle btn-xs absolute top-1 right-1 z-10"
           onClick={tryEdit}
         >
           <Pencil className="text-primary" size={16} />

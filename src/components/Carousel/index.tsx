@@ -26,7 +26,7 @@ const Carousel: React.FC<Props> = ({ children }) => {
 
             if (leftButtonRef.current && rightButtonRef.current) {
                 leftButtonRef.current.disabled = scrollLeft === 0;
-                rightButtonRef.current.disabled = scrollLeft + clientWidth >= scrollWidth;
+                rightButtonRef.current.disabled = scrollLeft + clientWidth + rightButtonRef.current.offsetWidth >= scrollWidth;
             }
         }
     };
@@ -35,10 +35,13 @@ const Carousel: React.FC<Props> = ({ children }) => {
         handleScroll();
 
         containerRef.current?.addEventListener('scroll', handleScroll);
-        containerRef.current?.addEventListener('resize', handleScroll);
+
+        const resizeObserver = new ResizeObserver(handleScroll);
+        resizeObserver.observe(containerRef.current!);
+
         return () => {
             containerRef.current?.removeEventListener('scroll', handleScroll);
-            containerRef.current?.removeEventListener('resize', handleScroll);
+            resizeObserver.disconnect();
         };
     }, []);
 
@@ -53,7 +56,7 @@ const Carousel: React.FC<Props> = ({ children }) => {
             </button>
 
             <div
-                className="flex overflow-x-auto no-scrollbar space-x-4 mx-2 w-full"
+                className="flex overflow-x-auto no-scrollbar space-x-4 mx-2 px-1 w-full"
                 ref={containerRef}
             >
                 {children}
